@@ -64,11 +64,14 @@ reponse:
 ### Viewing instrumentation data
 #### Jaeger UI
 open in your browser: ```http://localhost:16686``` then select service and find traces. 
+
 <img src="doc/jaeger-tracer.png" style="width:100%;max-width:600px" />
 
 <img src="doc/jaeger-trace-detail.png" style="width:100%;max-width:600px" />
+
 #### Prometheus UI
 ```http://localhost:9090```
+
 <img src="doc/prometheus-example-query.png" style="width:100%;max-width:600px" />
 ### Make test:
 ```
