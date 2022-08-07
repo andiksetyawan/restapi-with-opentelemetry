@@ -24,12 +24,12 @@ For a starter, export env `env.example` to your os env / docker env
 ## Usage
 
 ### Development
-Run otel-collector, Promotheus, Jaeger service with docker-compose:
+Run **otel-collector**, **Promotheus**, **Jaeger** service with docker-compose:
 ```
 docker-compose -f deploy/docker-compose/docker-compose.yaml up
 ```
 
-and then run web server:
+##### Run restapi server:
 ```
  go mod tidy
 ```
@@ -69,7 +69,7 @@ open in your browser: ```http://localhost:16686``` then select service and find 
 #### Prometheus UI
 ```http://localhost:9090```
 <img src="doc/prometheus-example-query.png" style="width:100%;max-width:600px" />
-## Make test:
+### Make test:
 ```
 make test
 ```
