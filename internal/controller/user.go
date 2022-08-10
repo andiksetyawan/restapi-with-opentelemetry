@@ -16,10 +16,10 @@ type IUserController interface {
 }
 
 type userController struct {
-	userService service.UserService
+	userService service.IUserService
 }
 
-func NewUserController(userService service.UserService) IUserController {
+func NewUserController(userService service.IUserService) IUserController {
 	return &userController{userService: userService}
 }
 

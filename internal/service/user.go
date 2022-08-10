@@ -12,7 +12,7 @@ import (
 	"restapi-with-opentelemetry/internal/repository"
 )
 
-type UserService interface {
+type IUserService interface {
 	CreateUser(ctx context.Context, user *entity.User) (*entity.User, error)
 }
 
@@ -21,7 +21,7 @@ type userService struct {
 }
 
 //NewUserService create new instance user service
-func NewUserService(repo repository.IUserRepository) UserService {
+func NewUserService(repo repository.IUserRepository) IUserService {
 	return &userService{repo: repo}
 }
 
