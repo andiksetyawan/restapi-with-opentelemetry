@@ -40,7 +40,12 @@ func NewServer() *server {
 	userRepository := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepository)
 	userController := controller.NewUserController(userService)
-	router := router.NewRouter(userController)
+
+	authRepository := repository.NewUserRepository(db)
+	authService := service.NewAuthService(authRepository)
+	authController := controller.NewAuthController(authService)
+
+	router := router.NewRouter(userController, authController)
 
 	return &server{
 		router:              router,

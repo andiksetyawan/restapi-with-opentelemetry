@@ -13,13 +13,14 @@ import (
 
 type IUserController interface {
 	Create(w http.ResponseWriter, r *http.Request)
+	Me(w http.ResponseWriter, r *http.Request)
 }
 
 type userController struct {
-	userService service.UserService
+	userService service.IUserService
 }
 
-func NewUserController(userService service.UserService) IUserController {
+func NewUserController(userService service.IUserService) IUserController {
 	return &userController{userService: userService}
 }
 
@@ -31,7 +32,7 @@ func (u *userController) Create(w http.ResponseWriter, r *http.Request) {
 		web.RespondWithError(w, http.StatusInternalServerError, "failed to parsing body payload")
 		return
 	}
-	newUser := entity.User{Name: userCreateRequest.Name}
+	newUser := entity.User{Name: userCreateRequest.Name, Email: userCreateRequest.Email, Password: userCreateRequest.Password}
 	createdUser, err := u.userService.CreateUser(r.Context(), &newUser)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to create user")
@@ -46,5 +47,14 @@ func (u *userController) Create(w http.ResponseWriter, r *http.Request) {
 			Name:      createdUser.Name,
 			CreatedAt: createdUser.CreatedAt,
 		},
+	})
+}
+
+func (u *userController) Me(w http.ResponseWriter, r *http.Request) {
+	user := r.Context().Value("user")
+	web.RespondWithJSON(w, http.StatusOK, model.ApiResponse{
+		Error:   false,
+		Message: "OK",
+		Data:    user,
 	})
 }

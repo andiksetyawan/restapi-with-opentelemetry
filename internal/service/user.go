@@ -12,8 +12,9 @@ import (
 	"restapi-with-opentelemetry/internal/repository"
 )
 
-type UserService interface {
+type IUserService interface {
 	CreateUser(ctx context.Context, user *entity.User) (*entity.User, error)
+	FindUserByID(ctx context.Context, ID *uint) (*entity.User, error)
 }
 
 type userService struct {
@@ -21,7 +22,7 @@ type userService struct {
 }
 
 //NewUserService create new instance user service
-func NewUserService(repo repository.IUserRepository) UserService {
+func NewUserService(repo repository.IUserRepository) IUserService {
 	return &userService{repo: repo}
 }
 
@@ -37,4 +38,18 @@ func (u *userService) CreateUser(ctx context.Context, user *entity.User) (*entit
 	}
 
 	return createdUser, nil
+}
+
+//FindUserByID service
+func (u *userService) FindUserByID(ctx context.Context, ID *uint) (*entity.User, error) {
+	//service tracer
+	_, span := otel.Tracer(config.ServiceName).Start(ctx, "service.user.FindUserByID")
+	defer span.End()
+
+	user, err := u.repo.FindUserByID(ctx, ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
