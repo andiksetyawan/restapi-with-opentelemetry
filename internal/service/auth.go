@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 
+	"go.opentelemetry.io/otel"
+	"restapi-with-opentelemetry/config"
 	"restapi-with-opentelemetry/internal/entity"
 	"restapi-with-opentelemetry/internal/model"
 	"restapi-with-opentelemetry/internal/repository"
@@ -26,6 +28,10 @@ func NewAuthService(userRepository repository.IUserRepository) IAuthService {
 }
 
 func (a *authService) Login(ctx context.Context, authRequest *model.AuthLoginRequest) (string, error) {
+	//service tracer
+	_, span := otel.Tracer(config.ServiceName).Start(ctx, "service.auth.Login")
+	defer span.End()
+
 	user, err := a.userRepository.FindUserByEmail(ctx, &authRequest.Email)
 	if err != nil {
 		return "", err
@@ -45,6 +51,10 @@ func (a *authService) Login(ctx context.Context, authRequest *model.AuthLoginReq
 }
 
 func (a *authService) SignUp(ctx context.Context, reqUser *model.AuthSignupRequest) (string, error) {
+	//service tracer
+	_, span := otel.Tracer(config.ServiceName).Start(ctx, "service.auth.Signup")
+	defer span.End()
+
 	hashPassword, err := token.HashBuilder(reqUser.Password)
 	if err != nil {
 		return "", err
@@ -69,6 +79,9 @@ func (a *authService) SignUp(ctx context.Context, reqUser *model.AuthSignupReque
 }
 
 func (a *authService) Authorize(ctx context.Context, jwtToken *string) (*entity.User, error) {
+	_, span := otel.Tracer(config.ServiceName).Start(ctx, "service.auth.Authorize")
+	defer span.End()
+
 	//TODO apakah akses helper harus melalui injeksi dari controller dgn menambah instance di struct authService?.
 	claims, err := token.JwtTokenIsValid(*jwtToken)
 	if err != nil {
