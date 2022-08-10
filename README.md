@@ -73,6 +73,7 @@ open in your browser: ```http://localhost:16686``` then select service and find 
 ```http://localhost:9090```
 
 <img src="doc/prometheus-example-query.png" style="width:100%;max-width:600px" />
+
 ### Make test:
 ```
 make test
@@ -81,6 +82,7 @@ or
 ```
 go test ./...
 ```
+
 
 ### Todo:
 - [ ] Create grafana server and add prometheus visualization
