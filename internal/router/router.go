@@ -26,7 +26,7 @@ func NewRouter(userController controller.IUserController, authController control
 		NewAuthRouter(v1, authController)
 		privateV1 := v1.PathPrefix("/").Subrouter()
 		{
-			privateV1.Use(authController.AuthorizeMiddleware)
+			privateV1.Use(authController.Authorize)
 			NewUserRouter(privateV1, userController)
 		}
 	}

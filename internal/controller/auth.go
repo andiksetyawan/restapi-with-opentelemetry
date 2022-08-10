@@ -15,26 +15,11 @@ import (
 type IAuthController interface {
 	Login(w http.ResponseWriter, r *http.Request)
 	Signup(w http.ResponseWriter, r *http.Request)
-	AuthorizeMiddleware(next http.Handler) http.Handler
+	Authorize(next http.Handler) http.Handler
 }
 
 type authController struct {
 	authService service.IAuthService
-}
-
-func (a *authController) AuthorizeMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		tokenBearerString := r.Header.Get("Authorization")
-		tokenString := strings.Replace(tokenBearerString, "Bearer ", "", 1)
-		user, err := a.authService.Authorize(r.Context(), &tokenString)
-		if err != nil {
-			web.RespondWithError(w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
-			return
-		}
-
-		ctx := context.WithValue(r.Context(), "user", user)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
 }
 
 func NewAuthController(authService service.IAuthService) IAuthController {
@@ -82,5 +67,21 @@ func (a *authController) Signup(w http.ResponseWriter, r *http.Request) {
 		Error:   false,
 		Message: "OK",
 		Data:    model.AuthLoginSignupResponse{Token: token},
+	})
+}
+
+//Authorize this is authorize controller for middleware function
+func (a *authController) Authorize(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		tokenBearerString := r.Header.Get("Authorization")
+		tokenString := strings.Replace(tokenBearerString, "Bearer ", "", 1)
+		user, err := a.authService.Authorize(r.Context(), &tokenString)
+		if err != nil {
+			web.RespondWithError(w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), "user", user)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

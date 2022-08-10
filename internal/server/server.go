@@ -41,8 +41,7 @@ func NewServer() *server {
 	userService := service.NewUserService(userRepository)
 	userController := controller.NewUserController(userService)
 
-	authRepository := repository.NewUserRepository(db)
-	authService := service.NewAuthService(authRepository)
+	authService := service.NewAuthService(userRepository) //TODO authservice using user repo ?
 	authController := controller.NewAuthController(authService)
 
 	router := router.NewRouter(userController, authController)
