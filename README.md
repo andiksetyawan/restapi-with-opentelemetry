@@ -14,6 +14,7 @@ App + SDK ---> OpenTelemetry Collector ---|
 
 1. [Go](https://golang.org/doc/install) 1.16+
 2. [Docker](https://docs.docker.com/engine/install/) for database testing with [testcontainer](https://www.testcontainers.org/)
+3. [Google Wire](https://github.com/google/wire) for dependency injection code generator
 
 ### Setting up environment
 
