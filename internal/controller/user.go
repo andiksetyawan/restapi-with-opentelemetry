@@ -51,10 +51,15 @@ func (u *userController) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (u *userController) Me(w http.ResponseWriter, r *http.Request) {
-	user := r.Context().Value("user")
+	user := r.Context().Value("user").(*entity.User)
 	web.RespondWithJSON(w, http.StatusOK, model.ApiResponse{
 		Error:   false,
 		Message: "OK",
-		Data:    user,
+		Data: model.UserMeResponse{
+			ID:        user.ID,
+			Name:      user.Name,
+			Email:     user.Email,
+			CreatedAt: user.CreatedAt,
+		},
 	})
 }

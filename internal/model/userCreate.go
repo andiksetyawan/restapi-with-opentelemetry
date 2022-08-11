@@ -9,5 +9,6 @@ type UserCreateRequest struct {
 type UserCreateResponse struct {
 	ID        uint   `json:"id"`
 	Name      string `json:"name"`
+	Email     string `json:"email"`
 	CreatedAt int64  `json:"created_at"`
 }

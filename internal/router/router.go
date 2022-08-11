@@ -9,7 +9,7 @@ import (
 	"restapi-with-opentelemetry/internal/controller"
 )
 
-func NewRouter(userController controller.IUserController, authController controller.IAuthController) *mux.Router {
+func NewRouter(userController controller.IUserController, authController controller.IAuthController, articleController controller.IArticleController) *mux.Router {
 	r := mux.NewRouter()
 
 	//otelmux middleware, tracing parentspan with path route
@@ -28,6 +28,7 @@ func NewRouter(userController controller.IUserController, authController control
 		{
 			privateV1.Use(authController.Authorize)
 			NewUserRouter(privateV1, userController)
+			NewArticleRouter(privateV1, articleController)
 		}
 	}
 

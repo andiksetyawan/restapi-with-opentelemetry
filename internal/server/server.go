@@ -10,11 +10,6 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"restapi-with-opentelemetry/config"
-	"restapi-with-opentelemetry/internal/controller"
-	"restapi-with-opentelemetry/internal/repository"
-	"restapi-with-opentelemetry/internal/router"
-	"restapi-with-opentelemetry/internal/service"
-	"restapi-with-opentelemetry/internal/store"
 	"restapi-with-opentelemetry/pkg/observability"
 )
 
@@ -33,18 +28,7 @@ func NewServer() *server {
 	//setup tracer exporter
 	shutdownExporter := observability.InitTracerProvider()
 
-	db := store.NewSQLLite()
-	//db := store.NewPostgreSQLDb().Connect()
-
-	//TODO Google Wire
-	userRepository := repository.NewUserRepository(db)
-	userService := service.NewUserService(userRepository)
-	userController := controller.NewUserController(userService)
-
-	authService := service.NewAuthService(userRepository) //TODO authservice using user repo ?
-	authController := controller.NewAuthController(authService)
-
-	router := router.NewRouter(userController, authController)
+	router := InitializedServerRouter()
 
 	return &server{
 		router:              router,
