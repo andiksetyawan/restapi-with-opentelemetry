@@ -20,7 +20,8 @@ func NewSQLLite() *gorm.DB {
 		return nil
 	}
 
-	//auto migrate user entity
+	//auto migrate user, article entity
 	db.AutoMigrate(&entity.User{})
+	db.AutoMigrate(&entity.Article{})
 	return db
 }
